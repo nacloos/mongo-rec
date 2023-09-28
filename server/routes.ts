@@ -32,6 +32,8 @@ class Routes {
 
   @Router.patch("/users")
   async updateUser(session: WebSessionDoc, update: Partial<UserDoc>) {
+    console.log("Update:");
+    console.log(update);
     const user = WebSession.getUser(session);
     return await User.update(user, update);
   }
@@ -62,9 +64,12 @@ class Routes {
 
   @Router.delete("/posts/:_id")
   async deletePost(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    await Post.isAuthor(_id, user);
+    return await Post.delete(_id);
     // TODO 3: Delete the post with given _id
     // Make sure the user deleting is the author of the post
-    throw new Error("Not implemented!");
+    // throw new Error("Not implemented!");
   }
 }
 
